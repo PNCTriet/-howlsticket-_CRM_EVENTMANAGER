@@ -2,7 +2,7 @@
 
 ### Ghi chú chung
 
-- **Base URL**: `https://api.yourdomain.com` (thay bằng URL thực tế)
+- **Base URL**: `https://api.otcayxe.com` (thay bằng URL thực tế)
 - **Auth**:
   - Nơi có `JwtAuthGuard` → cần header: `Authorization: Bearer <access_token>`
   - Nơi có `RoleGuard` + `@Roles(...)` → chỉ các role được khai báo mới truy cập được.

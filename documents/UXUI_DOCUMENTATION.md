@@ -1,6 +1,6 @@
 # PROJECT RULES & DESIGN SYSTEM
 ## 1. Project Overview
-- **Name:** OCX Partner Portal (Event Manager Dashboard)
+- **Name:** Howlsticket CRM (Event Manager Dashboard)
 - **Role:** B2B Admin Dashboard for Event Organizers.
 - **Goal:** High-performance, clean, and real-time tracking of ticket sales and revenue.
 
@@ -37,6 +37,6 @@
 - **Naming:** PascalCase for components, camelCase for functions/vars.
 
 ## 5. API Integration Rules
-- Base URL: `https://api.yourdomain.com`
+- Base URL: `https://api.otcayxe.com`
 - Handle 401 Unauthorized: Auto-redirect to `/login` and clear session.
 - Real-time: Use React Query `refetchInterval` (30s) for Dashboard stats.
