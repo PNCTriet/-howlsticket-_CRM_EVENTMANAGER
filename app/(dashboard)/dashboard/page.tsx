@@ -1,4 +1,5 @@
 import { EventSelector } from "./components/EventSelector";
+import { EventInfoCard } from "./components/EventInfoCard";
 import { StatsCards } from "./components/StatsCards";
 import { RevenueHeatmap } from "./components/RevenueHeatmap";
 import { RevenueChart } from "./components/RevenueChart";
@@ -9,11 +10,13 @@ import { DashboardPageHeader } from "./components/DashboardPageHeader";
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6 overflow-x-hidden">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <DashboardPageHeader />
         <EventSelector />
       </div>
+
+      <EventInfoCard />
 
       <StatsCards />
 

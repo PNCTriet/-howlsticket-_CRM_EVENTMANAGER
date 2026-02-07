@@ -38,7 +38,7 @@ export function OrderDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] overflow-y-auto border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 sm:max-w-lg">
+      <DialogContent className="fixed inset-x-0 bottom-0 top-auto max-h-[85vh] overflow-y-auto rounded-t-xl border-0 border-t border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 sm:inset-auto sm:left-[50%] sm:top-[50%] sm:max-w-lg sm:max-h-[85vh] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-lg sm:border">
         <DialogHeader>
           <DialogTitle className="text-zinc-900 dark:text-zinc-100">
             {t("orderDetail")} {orderId?.slice(0, 8)}

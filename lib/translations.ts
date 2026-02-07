@@ -17,9 +17,16 @@ export const dashboardTranslations = {
   ticketsTotal: { vi: "tổng", en: "total" },
   checkinRealtime: { vi: "Check-in realtime", en: "Check-in realtime" },
 
-  // EventSelector
+  // EventSelector & EventInfoCard
   selectEvent: { vi: "Chọn sự kiện", en: "Select event" },
   noEvents: { vi: "Chưa có sự kiện", en: "No events" },
+  eventDate: { vi: "Ngày diễn ra", en: "Event date" },
+  countdown: { vi: "Đếm ngược", en: "Countdown" },
+  revenueTarget: { vi: "Doanh thu / Mục tiêu", en: "Revenue / Target" },
+  daysLeft: { vi: "{n} ngày", en: "{n} days" },
+  hoursLeft: { vi: "{n} giờ", en: "{n} hours" },
+  past: { vi: "Đã diễn ra", en: "Past" },
+  noEventSelected: { vi: "Chọn sự kiện", en: "Select an event" },
 
   // RevenueChart
   revenueOverTime: { vi: "Doanh thu theo thời gian", en: "Revenue over time" },
