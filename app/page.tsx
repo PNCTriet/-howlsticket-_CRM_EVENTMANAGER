@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-const NOTE_QUOTE = "Món quà nhỏ tặng Đông và Hân, về bờ thôi";
+const NOTE_QUOTE = "Món quà nhỏ tặng Đông và Hân, chúc anh em mình soldouttttttt !";
 const NOTE_PS = "Triết Nguyễn Phạm , Howlsticket";
 
 const LOGO_SRC = "/images/howlstudio_logo_stransp_alt1.png";
