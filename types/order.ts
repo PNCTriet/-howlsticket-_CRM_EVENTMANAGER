@@ -5,6 +5,8 @@ export interface OrderUser {
   last_name?: string;
   phone?: string;
   avatar_url?: string;
+  /** Facebook profile URL or username */
+  fb?: string;
 }
 
 export interface OrderItem {

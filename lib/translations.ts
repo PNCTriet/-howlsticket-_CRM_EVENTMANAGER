@@ -102,6 +102,7 @@ export const dashboardTranslations = {
   fullName: { vi: "Họ tên", en: "Full name" },
   email: { vi: "Email", en: "Email" },
   phone: { vi: "Số điện thoại", en: "Phone" },
+  facebook: { vi: "Facebook", en: "Facebook" },
   noCustomerInfo: { vi: "Không có thông tin khách hàng.", en: "No customer information." },
 } as const;
 

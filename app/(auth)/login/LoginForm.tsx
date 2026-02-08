@@ -83,15 +83,25 @@ export function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 p-4">
-      <Card className="w-full max-w-sm border-zinc-200 bg-white shadow-sm">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-xl font-semibold text-zinc-900">
-            Howlsticket CRM
-          </CardTitle>
-          <CardDescription className="text-zinc-500">
-            Đăng nhập để quản lý sự kiện và vé
-          </CardDescription>
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 p-4 dark:bg-zinc-950">
+      <Card className="w-full max-w-sm border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <CardHeader className="flex flex-col items-center space-y-3 pt-6">
+          <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-zinc-200 bg-zinc-900 dark:border-zinc-700 dark:bg-zinc-950">
+            <img
+              src="/images/howlstudio_logo_stransp_alt1.png"
+              alt="Howlstudio"
+              className="size-20 object-contain"
+              loading="eager"
+            />
+          </div>
+          <div className="space-y-1 text-center">
+            <CardTitle className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+              Howlsticket CRM
+            </CardTitle>
+            <CardDescription className="text-zinc-500 dark:text-zinc-400">
+              Đăng nhập để quản lý sự kiện và vé
+            </CardDescription>
+          </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
