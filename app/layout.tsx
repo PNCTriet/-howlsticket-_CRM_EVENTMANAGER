@@ -9,9 +9,28 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://howlsticket.com";
+const logoPath = "/images/howlstudio_logo_blackbr_alt1.png";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Howlsticket CRM",
   description: "Event Manager Dashboard – B2B Admin for Event Organizers",
+  openGraph: {
+    title: "Howlsticket CRM",
+    description: "Event Manager Dashboard – B2B Admin for Event Organizers",
+    url: siteUrl,
+    siteName: "Howlsticket",
+    images: [{ url: logoPath, width: 1200, height: 630, alt: "Howls Studio" }],
+    locale: "vi_VN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Howlsticket CRM",
+    description: "Event Manager Dashboard – B2B Admin for Event Organizers",
+    images: [logoPath],
+  },
 };
 
 export default function RootLayout({
