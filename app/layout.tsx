@@ -9,7 +9,7 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://howlsticket.com";
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://admin.otcayxe.com";
 const logoPath = "/images/howlstudio_logo_blackbr_alt1.png";
 
 export const metadata: Metadata = {
