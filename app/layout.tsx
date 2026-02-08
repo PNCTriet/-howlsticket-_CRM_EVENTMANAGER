@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Howlsticket CRM",
   description: "Event Manager Dashboard – B2B Admin for Event Organizers",
+  icons: {
+    icon: logoPath,
+    type: "image/png",
+  },
   openGraph: {
     title: "Howlsticket CRM",
     description: "Event Manager Dashboard – B2B Admin for Event Organizers",
