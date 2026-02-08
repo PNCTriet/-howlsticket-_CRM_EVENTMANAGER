@@ -11,7 +11,7 @@ dist/
 .env.*
 .env.local.example
 
-# logs & cache
+# logs & cache 
 *.log
 .cache/
 .turbo/

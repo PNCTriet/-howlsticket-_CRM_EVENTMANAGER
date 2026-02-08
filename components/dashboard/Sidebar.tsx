@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { toast } from "sonner";
 import {
   LayoutDashboard,
   Ticket,
@@ -13,11 +14,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+const LOCKED_MESSAGE =
+  "Cuốn bận đi bán đồ in3D mưu sinh rồi...";
+
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/orders", label: "Đơn hàng", icon: Ticket },
-  { href: "/marketing", label: "Marketing", icon: Megaphone },
-  { href: "/checkin", label: "Check-in", icon: QrCode },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, locked: false },
+  { href: "/orders", label: "Đơn hàng", icon: Ticket, locked: true },
+  { href: "/marketing", label: "Marketing", icon: Megaphone, locked: true },
+  { href: "/checkin", label: "Check-in", icon: QrCode, locked: true },
 ] as const;
 
 interface SidebarProps {
@@ -56,21 +60,33 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         </Button>
       </div>
       <nav className="flex-1 space-y-0.5 p-2">
-        {navItems.map(({ href, label, icon: Icon }) => {
+        {navItems.map(({ href, label, icon: Icon, locked }) => {
           const isActive =
             pathname === href ||
             (href !== "/dashboard" && pathname.startsWith(href));
+          const style = cn(
+            "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+            isActive
+              ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
+              : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100",
+            collapsed && "justify-center px-2"
+          );
+          if (locked) {
+            return (
+              <button
+                key={href}
+                type="button"
+                onClick={() => toast.info(LOCKED_MESSAGE)}
+                className={style}
+              >
+                <Icon className="size-5 shrink-0 stroke-[1.5]" />
+                {!collapsed && <span>{label}</span>}
+              </button>
+            );
+          }
           return (
             <Link key={href} href={href}>
-              <span
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  isActive
-                    ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
-                    : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100",
-                  collapsed && "justify-center px-2"
-                )}
-              >
+              <span className={style}>
                 <Icon className="size-5 shrink-0 stroke-[1.5]" />
                 {!collapsed && <span>{label}</span>}
               </span>

@@ -10,7 +10,7 @@ const NOTE_PS = "Triết Nguyễn Phạm , Howlsticket";
 const LOGO_SRC = "/images/howlstudio_logo_stransp_alt1.png";
 const AVA_SRC = "/images/avatar/Howlstudio_founder_ava.png";
 const LOADING_DURATION_MS = 1200;
-const NOTE_DURATION_MS = 5000;
+const NOTE_DURATION_MS = 3000;
 const TYPING_SPEED_MS = 50;
 
 export default function HomePage() {

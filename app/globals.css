@@ -47,7 +47,19 @@
   * {
     @apply border-border;
   }
+  /* Đồng bộ nền với app (zinc-50 / zinc-950) để overscroll trên iOS không lộ khoảng trắng */
+  html {
+    min-height: 100%;
+    background-color: #fafafa; /* zinc-50 */
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .dark html {
+    background-color: #09090b; /* zinc-950 */
+  }
   body {
     @apply bg-background text-foreground;
+    min-height: 100%;
+    overscroll-behavior-y: none;
   }
 }
