@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { useDashboardEventTimeRange } from "@/hooks/useDashboardEventTimeRange";
 import { useEventSelector } from "@/providers/event-selector-provider";
 import { useDashboardTranslations } from "@/hooks/useDashboardTranslations";
@@ -19,8 +20,12 @@ import {
   eachDayOfInterval,
   getDay,
   isToday,
+  subMonths,
+  addMonths,
+  isSameMonth,
 } from "date-fns";
 import { useLocale } from "@/providers/locale-provider";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 function formatVnd(value: number) {
   return new Intl.NumberFormat("vi-VN", {
@@ -33,12 +38,14 @@ export function RevenueHeatmap() {
   const { t } = useDashboardTranslations();
   const { locale, dateFnsLocale } = useLocale();
   const { selectedEventId } = useEventSelector();
+  const [viewingMonth, setViewingMonth] = useState(() => startOfMonth(new Date()));
 
-  const now = new Date();
-  const monthStart = startOfMonth(now);
-  const monthEnd = endOfMonth(now);
+  const monthStart = viewingMonth;
+  const monthEnd = endOfMonth(viewingMonth);
   const fromStr = format(monthStart, "yyyy-MM-dd");
   const toStr = format(monthEnd, "yyyy-MM-dd");
+  const now = new Date();
+  const isCurrentMonth = isSameMonth(viewingMonth, now);
 
   const { data: timeData, isLoading } = useDashboardEventTimeRange(
     selectedEventId,
@@ -123,9 +130,42 @@ export function RevenueHeatmap() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          {format(monthStart, "MMMM yyyy", { locale: dateFnsLocale })}
-        </p>
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            {format(monthStart, "MMMM yyyy", { locale: dateFnsLocale })}
+          </p>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              size="icon"
+              className="size-8"
+              onClick={() => setViewingMonth((m) => startOfMonth(subMonths(m, 1)))}
+              aria-label={locale === "vi" ? "Tháng trước" : "Previous month"}
+            >
+              <ChevronLeft className="size-4" />
+            </Button>
+            {!isCurrentMonth && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs"
+                onClick={() => setViewingMonth(startOfMonth(now))}
+              >
+                {locale === "vi" ? "Tháng này" : "This month"}
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              size="icon"
+              className="size-8"
+              onClick={() => setViewingMonth((m) => startOfMonth(addMonths(m, 1)))}
+              disabled={isCurrentMonth}
+              aria-label={locale === "vi" ? "Tháng sau" : "Next month"}
+            >
+              <ChevronRight className="size-4" />
+            </Button>
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-center text-sm">
             <thead>

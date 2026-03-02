@@ -14,7 +14,8 @@ import { useDashboardEventTimeRange } from "@/hooks/useDashboardEventTimeRange";
 import { useEventSelector } from "@/providers/event-selector-provider";
 import { useLocale } from "@/providers/locale-provider";
 import { useDashboardTranslations } from "@/hooks/useDashboardTranslations";
-import { format, parseISO, subDays } from "date-fns";
+import { format, subDays, eachDayOfInterval, parseISO } from "date-fns";
+import { formatUtcDateInVietnam } from "@/lib/date-utils";
 import {
   AreaChart,
   Area,
@@ -78,15 +79,24 @@ export function RevenueChart() {
   const { dateFnsLocale } = useLocale();
   const { t } = useDashboardTranslations();
 
-  const chartData = useMemo(
-    () =>
-      (timeData ?? []).map((d) => ({
-        date: d.time,
-        label: format(parseISO(d.time), "d/M", { locale: dateFnsLocale }),
-        revenue: d.revenue ?? 0,
-      })),
-    [timeData, dateFnsLocale]
-  );
+  const chartData = useMemo(() => {
+    const from = range?.from ? parseISO(format(range.from, "yyyy-MM-dd")) : parseISO(fromStr || toStr || format(new Date(), "yyyy-MM-dd"));
+    const to = range?.to ? parseISO(format(range.to, "yyyy-MM-dd")) : parseISO(toStr || format(new Date(), "yyyy-MM-dd"));
+    const days = eachDayOfInterval({ start: from, end: to });
+    const dataMap = new Map<string, number>();
+    for (const d of timeData ?? []) {
+      const key = d.time.slice(0, 10);
+      dataMap.set(key, (d.revenue ?? 0) as number);
+    }
+    return days.map((d) => {
+      const key = format(d, "yyyy-MM-dd");
+      return {
+        date: key,
+        label: formatUtcDateInVietnam(key, "d/M", dateFnsLocale),
+        revenue: dataMap.get(key) ?? 0,
+      };
+    });
+  }, [timeData, dateFnsLocale, range?.from, range?.to, fromStr, toStr]);
 
   return (
     <Card className="border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">

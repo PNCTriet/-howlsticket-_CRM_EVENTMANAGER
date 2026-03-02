@@ -13,7 +13,8 @@ import { useDashboardEventTimeRange } from "@/hooks/useDashboardEventTimeRange";
 import { useEventSelector } from "@/providers/event-selector-provider";
 import { useLocale } from "@/providers/locale-provider";
 import { useDashboardTranslations } from "@/hooks/useDashboardTranslations";
-import { format, parseISO, subDays } from "date-fns";
+import { format, subDays, eachDayOfInterval, parseISO } from "date-fns";
+import { formatUtcDateInVietnam } from "@/lib/date-utils";
 import { DateRangePicker } from "./DateRangePicker";
 import type { DateRange } from "react-day-picker";
 
@@ -43,18 +44,31 @@ export function RevenueByDayTable() {
     toStr
   );
 
-  const rows = useMemo(
-    () =>
-      (timeData ?? [])
-        .map((d) => ({
-          date: d.time,
-          label: format(parseISO(d.time), "dd/MM/yyyy", { locale: dateFnsLocale }),
-          revenue: d.revenue ?? 0,
-          ticketsSold: (d as { tickets_sold?: number }).tickets_sold ?? 0,
-        }))
-        .sort((a, b) => b.date.localeCompare(a.date)),
-    [timeData, dateFnsLocale]
-  );
+  const rows = useMemo(() => {
+    const from = range?.from ? parseISO(format(range.from, "yyyy-MM-dd")) : parseISO(fromStr || toStr || format(new Date(), "yyyy-MM-dd"));
+    const to = range?.to ? parseISO(format(range.to, "yyyy-MM-dd")) : parseISO(toStr || format(new Date(), "yyyy-MM-dd"));
+    const days = eachDayOfInterval({ start: from, end: to });
+    const dataMap = new Map<string, { revenue: number; ticketsSold: number }>();
+    for (const d of timeData ?? []) {
+      const key = d.time.slice(0, 10);
+      dataMap.set(key, {
+        revenue: (d.revenue ?? 0) as number,
+        ticketsSold: (d as { tickets_sold?: number }).tickets_sold ?? 0,
+      });
+    }
+    return days
+      .map((d) => {
+        const key = format(d, "yyyy-MM-dd");
+        const row = dataMap.get(key) ?? { revenue: 0, ticketsSold: 0 };
+        return {
+          date: key,
+          label: formatUtcDateInVietnam(key, "dd/MM/yyyy", dateFnsLocale),
+          revenue: row.revenue,
+          ticketsSold: row.ticketsSold,
+        };
+      })
+      .sort((a, b) => b.date.localeCompare(a.date));
+  }, [timeData, dateFnsLocale, range?.from, range?.to, fromStr, toStr]);
 
   const total = useMemo(() => rows.reduce((s, r) => s + r.revenue, 0), [rows]);
 
