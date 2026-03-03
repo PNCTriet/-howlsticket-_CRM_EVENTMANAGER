@@ -14,7 +14,12 @@ export const dashboardService = {
 
   getEventTime: async (
     eventId: string,
-    params: { from: string; to: string; groupBy?: "day" | "week" | "month" }
+    params: {
+      from: string;
+      to: string;
+      groupBy?: "day" | "week" | "month";
+      timezone?: string;
+    }
   ) => {
     const { data } = await api.get<DashboardTimePoint[]>(
       `/dashboard/event/${eventId}/time`,

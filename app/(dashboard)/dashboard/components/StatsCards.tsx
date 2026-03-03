@@ -16,7 +16,7 @@ import { useEventSelector } from "@/providers/event-selector-provider";
 import { useDashboardTranslations } from "@/hooks/useDashboardTranslations";
 import { DollarSign, Ticket, QrCode } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { format, subDays } from "date-fns";
+import { getTodayInVietnam, getYesterdayInVietnam } from "@/lib/date-utils";
 
 function formatVnd(value: number) {
   return new Intl.NumberFormat("vi-VN", {
@@ -75,8 +75,8 @@ export function StatsCards() {
   const { data: eventTickets, isLoading: ticketsLoading } =
     useEventTickets(selectedEventId);
 
-  const todayStr = format(new Date(), "yyyy-MM-dd");
-  const yesterdayStr = format(subDays(new Date(), 1), "yyyy-MM-dd");
+  const todayStr = getTodayInVietnam();
+  const yesterdayStr = getYesterdayInVietnam();
   const { data: timeRangeData } = useDashboardEventTimeRange(
     selectedEventId,
     yesterdayStr,

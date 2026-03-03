@@ -13,8 +13,15 @@ import { useDashboardEventTimeRange } from "@/hooks/useDashboardEventTimeRange";
 import { useEventSelector } from "@/providers/event-selector-provider";
 import { useLocale } from "@/providers/locale-provider";
 import { useDashboardTranslations } from "@/hooks/useDashboardTranslations";
-import { format, subDays, eachDayOfInterval, parseISO } from "date-fns";
-import { formatUtcDateInVietnam } from "@/lib/date-utils";
+import { format, subDays } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
+import {
+  getTodayInVietnam,
+  getDateInVietnamOffset,
+  getDaysInRange,
+  formatDateKeyForDisplay,
+  VIETNAM_TZ,
+} from "@/lib/date-utils";
 import { DateRangePicker } from "./DateRangePicker";
 import type { DateRange } from "react-day-picker";
 
@@ -36,18 +43,19 @@ export function RevenueByDayTable() {
   const { t } = useDashboardTranslations();
   const [range, setRange] = useState<DateRange | undefined>(defaultRange);
 
-  const fromStr = range?.from ? format(range.from, "yyyy-MM-dd") : "";
-  const toStr = range?.to ? format(range.to, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd");
+  const fromStr = range?.from
+    ? formatInTimeZone(range.from, VIETNAM_TZ, "yyyy-MM-dd")
+    : getDateInVietnamOffset(29);
+  const toStr = range?.to
+    ? formatInTimeZone(range.to, VIETNAM_TZ, "yyyy-MM-dd")
+    : getTodayInVietnam();
   const { data: timeData, isLoading } = useDashboardEventTimeRange(
     selectedEventId,
-    fromStr || toStr,
+    fromStr,
     toStr
   );
 
   const rows = useMemo(() => {
-    const from = range?.from ? parseISO(format(range.from, "yyyy-MM-dd")) : parseISO(fromStr || toStr || format(new Date(), "yyyy-MM-dd"));
-    const to = range?.to ? parseISO(format(range.to, "yyyy-MM-dd")) : parseISO(toStr || format(new Date(), "yyyy-MM-dd"));
-    const days = eachDayOfInterval({ start: from, end: to });
     const dataMap = new Map<string, { revenue: number; ticketsSold: number }>();
     for (const d of timeData ?? []) {
       const key = d.time.slice(0, 10);
@@ -56,19 +64,19 @@ export function RevenueByDayTable() {
         ticketsSold: (d as { tickets_sold?: number }).tickets_sold ?? 0,
       });
     }
-    return days
-      .map((d) => {
-        const key = format(d, "yyyy-MM-dd");
+    const dayKeys = getDaysInRange(fromStr, toStr);
+    return dayKeys
+      .map((key) => {
         const row = dataMap.get(key) ?? { revenue: 0, ticketsSold: 0 };
         return {
           date: key,
-          label: formatUtcDateInVietnam(key, "dd/MM/yyyy", dateFnsLocale),
+          label: formatDateKeyForDisplay(key, "dd/MM/yyyy", dateFnsLocale),
           revenue: row.revenue,
           ticketsSold: row.ticketsSold,
         };
       })
       .sort((a, b) => b.date.localeCompare(a.date));
-  }, [timeData, dateFnsLocale, range?.from, range?.to, fromStr, toStr]);
+  }, [timeData, dateFnsLocale, fromStr, toStr]);
 
   const total = useMemo(() => rows.reduce((s, r) => s + r.revenue, 0), [rows]);
 

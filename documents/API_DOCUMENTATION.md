@@ -197,6 +197,7 @@
 - **POST** `/dashboard/organization/:id/send-report` — Gửi báo cáo tổ chức qua email
 - **GET** `/dashboard/event/:id` — Thống kê sự kiện
 - **GET** `/dashboard/event/:id/time` — Thống kê sự kiện theo thời gian
+  - **Timezone:** Dashboard frontend tính "today"/"yesterday" theo **Vietnam (Asia/Ho_Chi_Minh)**. Để doanh thu "trong ngày" khớp với ngày VN, backend nên **group by day theo timezone Vietnam** (ví dụ: `DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Ho_Chi_Minh')`). Nếu group theo UTC, order từ 1h–7h sáng VN sẽ bị tính vào ngày UTC trước đó.
 
 ### 11. Email API
 - **POST** `/email/send-tickets/:orderId` — Gửi email vé điện tử với PDF đính kèm
