@@ -16,7 +16,7 @@ import { useEventSelector } from "@/providers/event-selector-provider";
 import { useDashboardTranslations } from "@/hooks/useDashboardTranslations";
 import { DollarSign, Ticket, QrCode } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { getTodayInVietnam, getYesterdayInVietnam } from "@/lib/date-utils";
+import { getTodayInVietnam, getDateInVietnamOffset } from "@/lib/date-utils";
 
 function formatVnd(value: number) {
   return new Intl.NumberFormat("vi-VN", {
@@ -75,30 +75,44 @@ export function StatsCards() {
   const { data: eventTickets, isLoading: ticketsLoading } =
     useEventTickets(selectedEventId);
 
+  // Khoảng thời gian 30 ngày gần nhất theo giờ VN,
+  // dùng chung với bảng "Bảng doanh thu theo ngày".
   const todayStr = getTodayInVietnam();
-  const yesterdayStr = getYesterdayInVietnam();
+  const fromStr = getDateInVietnamOffset(29);
   const { data: timeRangeData } = useDashboardEventTimeRange(
     selectedEventId,
-    yesterdayStr,
+    fromStr,
     todayStr
   );
 
-  const { revenueToday: todayRevenue, revenueYesterday: yesterdayRevenue, percentChange } = useMemo(() => {
-    const list = timeRangeData ?? [];
-    const today = list.find((d) => d.time.startsWith(todayStr));
-    const yesterday = list.find((d) => d.time.startsWith(yesterdayStr));
-    const revToday = (today?.revenue ?? 0) as number;
-    const revYesterday = (yesterday?.revenue ?? 0) as number;
+  const {
+    revenueToday: todayRevenue,
+    revenueYesterday: yesterdayRevenue,
+    percentChange,
+  } = useMemo(() => {
+    const list = (timeRangeData ?? [])
+      .slice()
+      .sort((a, b) => a.time.localeCompare(b.time));
+
+    const last = list[list.length - 1];
+    const prev = list[list.length - 2];
+
+    const revToday = (last?.revenue ?? 0) as number;
+    const revYesterday = (prev?.revenue ?? 0) as number;
+
     let change: number | null = null;
     if (revYesterday > 0) {
       change = Math.round(((revToday - revYesterday) / revYesterday) * 100);
-    } else if (revToday > 0) change = 100;
+    } else if (revToday > 0) {
+      change = 100;
+    }
+
     return {
       revenueToday: revToday,
       revenueYesterday: revYesterday,
       percentChange: change,
     };
-  }, [timeRangeData, todayStr, yesterdayStr]);
+  }, [timeRangeData]);
 
   const revenue = useMemo(
     () =>
